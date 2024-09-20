@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.corncheeze.core.adapter.out.persistence.MemberMapper">
+
+    <resultMap id="basicInfoResultMap" type="com.corncheeze.core.domain.member.Member$BasicInfo">
+        <constructor>
+            <arg column="id" javaType="String"/>
+            <arg column="password" javaType="String"/>
+        </constructor>
+    </resultMap>
+
+    <resultMap id="additionalInfoResultMap" type="com.corncheeze.core.domain.member.Member$AdditionalInfo">
+        <constructor>
+            <arg column="nickname" javaType="String"/>
+        </constructor>
+    </resultMap>
+
+    <resultMap id="memberResultMap" type="com.corncheeze.core.domain.member.Member">
+        <constructor>
+            <idArg column="seq" javaType="Long"/>
+            <arg javaType="com.corncheeze.core.domain.member.Member$BasicInfo" resultMap="basicInfoResultMap" />
+            <arg javaType="com.corncheeze.core.domain.member.Member$AdditionalInfo" resultMap="additionalInfoResultMap" />
+            <arg javaType="com.corncheeze.core.domain.datahistory.DataHistory" resultMap="com.corncheeze.core.adapter.out.persistence.DataHistoryMapper.dataHistoryResultMap" />
+        </constructor>
+    </resultMap>
+
+    <delete id="deleteAll">
+        DELETE
+        FROM tb_member
+    </delete>
+
+    <select id="selectMemberById" parameterType="java.lang.String" resultMap="memberResultMap">
+        SELECT seq,
+               id,
+               password,
+               nickname,
+               create_user,
+               create_app,
+               create_dt,
+               update_user,
+               update_app,
+               update_dt
+        FROM tb_member
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectMemberByNickname" parameterType="java.lang.String" resultMap="memberResultMap">
+        SELECT seq,
+               id,
+               password,
+               nickname,
+               create_user,
+               create_app,
+               create_dt,
+               update_user,
+               update_app,
+               update_dt
+        FROM tb_member
+        WHERE nickname = #{nickname}
+    </select>
+
+    <insert id="insertMember" parameterType="com.corncheeze.core.domain.member.NewMember">
+        INSERT INTO tb_member (id,
+                               password,
+                               nickname,
+                               create_user,
+                               create_app,
+                               update_user,
+                               update_app)
+        VALUES (#{basicInfo.id},
+                #{basicInfo.password},
+                #{additionalInfo.nickname},
+                '${createUser}',
+                '${createApp}',
+                '${updateUser}',
+                '${updateApp}')
+    </insert>
+
+</mapper>
