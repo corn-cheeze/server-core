@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: corncheeze-server-core
+  profiles:
+    active: local
+  datasource:
+    hikari:
+      jdbc-url: jdbc:postgresql://localhost:5432/db_core?currentSchema=core&characterEncoding=UTF-8
+      username: db_core_user
+      password: db_core_user
+      driver-class-name: org.postgresql.Driver
+
+logging:
+  level:
+    org:
+      springframework:
+        jdbc: DEBUG
